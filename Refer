@@ -1,0 +1,3 @@
+## 모든 파일 ignore
+# .gitignore 는 추가
+!.gitignore
