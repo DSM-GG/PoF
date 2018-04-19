@@ -2,8 +2,8 @@
 ## 챕터 1
 * 농노  
 ![농노](https://github.com/DSM-GG/PoF/blob/master/Refer/Concentration.jpg)  
-농노 1은 사진 색 그대로,  농노 2는 망토는 흰색 상의는 주황색으로,  
-농노 3은 망토와 바지는 옅은 노란색, 상의는 녹차색으로 한다.
+농노 1은 사진 색 그대로,  농노 2는 두건은 흰색, 상의는 주황색으로,  
+농노 3은 두건과 바지는 옅은 노란색, 상의는 녹차색으로 한다.
 
 * 기사  
 ![기사](https://github.com/DSM-GG/PoF/blob/master/Refer/Knight.jpg)  
@@ -11,8 +11,10 @@
 기사 3은 어깨뽕을 뗀다.
 
 * 호위병  
-![호위병](https://github.com/DSM-GG/PoF/blob/master/Refer/Guardiun.jpg)  
-호위병 1은 왼쪽 그림으로, 호위병 2는 오른쪽 그림으로,  
+![호위병(정면)](https://github.com/DSM-GG/PoF/blob/master/Refer/%ED%98%B8%EC%9C%84%EB%B3%91/%ED%98%B8%EC%9C%84%EB%B3%91(%EC%A0%95%EB%A9%B4).JPG)  
+![호위병(측면)](https://github.com/DSM-GG/PoF/blob/master/Refer/%ED%98%B8%EC%9C%84%EB%B3%91/%ED%98%B8%EC%9C%84%EB%B3%91(%EC%B8%A1%EB%A9%B4).JPG)  
+![호위병 (너클)](https://github.com/DSM-GG/PoF/blob/master/Refer/%ED%98%B8%EC%9C%84%EB%B3%91/%ED%98%B8%EC%9C%84%EB%B3%91(%EC%A0%95%EB%A9%B4).JPG)  
+호위병 1은 3번째 그림으로, 호위병 2는 오른쪽 그림으로,  
 호위병 3은 가운데 그림으로 한다.
 ---
 ## 챕터 2
