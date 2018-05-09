@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using System.Collections;
 
 namespace UnityStandardAssets._2D
 {
@@ -18,6 +19,7 @@ namespace UnityStandardAssets._2D
         const float k_CeilingRadius = .01f; // Radius of the overlap circle to determine if the player can stand up
         private Animator m_Anim;            // Reference to the player's animator component.
         private Rigidbody2D m_Rigidbody2D;
+        private BoxCollider2D m_BoxCollider2D;
         private bool m_FacingRight = true;  // For determining which way the player is currently facing.
 
         private void Awake()
@@ -27,8 +29,13 @@ namespace UnityStandardAssets._2D
             m_CeilingCheck = transform.Find("CeilingCheck");
             m_Anim = GetComponent<Animator>();
             m_Rigidbody2D = GetComponent<Rigidbody2D>();
+            m_BoxCollider2D = GetComponent<BoxCollider2D>();
         }
 
+        private void Update()
+        {
+
+        }
 
         private void FixedUpdate()
         {
@@ -99,6 +106,21 @@ namespace UnityStandardAssets._2D
             }
         }
 
+        public IEnumerator Attack()
+        {
+            m_Anim.SetBool("Attack", true);
+            m_BoxCollider2D.enabled = true;
+            yield return new WaitForSeconds(0.25f);
+            m_Anim.SetBool("Attack", false);
+            m_BoxCollider2D.enabled = false;
+        }
+
+        private void OnTriggerEnter2D(Collider2D other)
+        {
+            if (other.gameObject.CompareTag("Enemy"))
+                // Write Attack Message
+                Debug.Log("Hello!");
+        }
 
         private void Flip()
         {
