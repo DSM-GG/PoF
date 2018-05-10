@@ -4,8 +4,13 @@
 TagManager:
   serializedVersion: 2
   tags:
+<<<<<<< HEAD
   - Tile
   - Enemy
+=======
+  - Enemy
+  - Tile
+>>>>>>> b3473dda6d5503c36c8e441270f6aa5e562044eb
   - Wall
   layers:
   - Default
