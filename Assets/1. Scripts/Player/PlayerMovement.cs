@@ -57,7 +57,7 @@ public class PlayerMovement : MonoBehaviour {
         }
 
         // 오브젝트의 방향 전환
-        transform.localScale = new Vector3(direction * 3, 3, 1);
+        transform.localScale = new Vector3(direction * 1, 1, 1);
 
         return;
     }

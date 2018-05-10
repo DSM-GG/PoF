@@ -1,8 +1,11 @@
-﻿using System.Collections;
+﻿// EnemyDtect_Trace
+
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyDetect_Trace : MonoBehaviour {
+public class EnemyDetect_Trace : MonoBehaviour
+{
 
     public bool isDetecting = false;
     public GameObject target = null;
@@ -11,7 +14,7 @@ public class EnemyDetect_Trace : MonoBehaviour {
     private void Start()
     {
         // EnemyStat에 있는 추격 감지 거리값을 얻어와서 콜라이더에 적용.
-        circle = GetComponent<CircleCollider2D>(); 
+        circle = GetComponent<CircleCollider2D>();
         float size = gameObject.GetComponentInParent<EnemyStat>().detectRange;
 
         circle.radius = size;
