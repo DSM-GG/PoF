@@ -56,7 +56,6 @@ namespace UnityStandardAssets._2D
                 {
                     m_Grounded = true;
                     m_JumpAttackBox.SetActive(false);
-                    m_Rigidbody2D.gravityScale = 3;
                }
             }
             m_Anim.SetBool("Ground", m_Grounded);
@@ -127,7 +126,7 @@ namespace UnityStandardAssets._2D
             if (!m_Grounded)
             {
                 Debug.Log("Jump Attack!");
-                m_Rigidbody2D.gravityScale = 50;
+                m_Rigidbody2D.AddForce(new Vector2(0, m_JumpForce) * -2);
                 m_JumpAttackBox.SetActive(true);
                 m_InputDisableTime += 0.75f;
             }
