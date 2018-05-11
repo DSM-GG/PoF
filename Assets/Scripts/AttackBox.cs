@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Attack : MonoBehaviour
+public class AttackBox : MonoBehaviour
 {
     [SerializeField] private GameObject Player = null;
     [SerializeField] private float AttackForce = 100;

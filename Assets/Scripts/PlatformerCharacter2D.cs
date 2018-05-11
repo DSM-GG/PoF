@@ -4,6 +4,12 @@ using System.Collections;
 
 namespace UnityStandardAssets._2D
 {
+    public enum AttackType
+    {
+        Default,
+        FallingAttack
+    }
+
     public class PlatformerCharacter2D : MonoBehaviour
     {
         [SerializeField] private float m_MaxSpeed = 10f;                    // The fastest the player can travel in the x axis.
@@ -13,9 +19,10 @@ namespace UnityStandardAssets._2D
         [SerializeField] private LayerMask m_WhatIsGround;                  // A mask determining what is ground to the character
         [SerializeField] private GameObject m_AttackBox = null;
         [SerializeField] private GameObject m_JumpAttackBox = null;
+        
+        private float m_HealthPoint = 1;
         private float m_InputDisableTime;
         private float m_NextComboAbleTime;
-
         private Transform m_GroundCheck;    // A position marking where to check if the player is grounded.
         const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
         private bool m_Grounded;            // Whether or not the player is grounded.
@@ -118,14 +125,14 @@ namespace UnityStandardAssets._2D
             }
         }
 
-        public void Attack()
+        public void Attack(AttackType attackType)
         {
             if (m_InputDisableTime > 0)
                 return;
             
-            if (!m_Grounded)
+            if (attackType == AttackType.FallingAttack && !m_Grounded)
             {
-                Debug.Log("Jump Attack!");
+                Debug.Log("Falling Attack!");
                 m_Rigidbody2D.AddForce(new Vector2(0, m_JumpForce) * -2);
                 m_JumpAttackBox.SetActive(true);
                 m_InputDisableTime += 0.75f;

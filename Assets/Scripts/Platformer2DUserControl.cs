@@ -41,7 +41,12 @@ namespace UnityStandardAssets._2D
             m_Jump = false;
 
             if (m_Attack)
-                m_Character.Attack();
+            {
+                if (CrossPlatformInputManager.GetAxis("Vertical") < 0)
+                    m_Character.Attack(AttackType.FallingAttack);
+                else
+                    m_Character.Attack(AttackType.Default);
+            }
             m_Attack = false;
         }
     }
