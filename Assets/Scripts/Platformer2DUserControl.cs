@@ -26,7 +26,7 @@ namespace UnityStandardAssets._2D
 
             if(!m_Attack)
             {
-                m_Attack = CrossPlatformInputManager.GetButtonDown("Fire1");
+                m_Attack = CrossPlatformInputManager.GetButtonDown("Attack");
             }
         }
 
@@ -42,7 +42,7 @@ namespace UnityStandardAssets._2D
 
             if (m_Attack)
             {
-                if (CrossPlatformInputManager.GetAxis("Vertical") < 0)
+                if (CrossPlatformInputManager.GetButton("Down"))
                     m_Character.Attack(AttackType.FallingAttack);
                 else
                     m_Character.Attack(AttackType.Default);

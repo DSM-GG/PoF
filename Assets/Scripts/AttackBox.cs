@@ -5,7 +5,7 @@ using UnityEngine;
 public class AttackBox : MonoBehaviour
 {
     [SerializeField] private GameObject Player = null;
-    [SerializeField] private float AttackForce = 100;
+    [SerializeField] private float AttackForce = 50;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
@@ -13,7 +13,7 @@ public class AttackBox : MonoBehaviour
         {
             Vector2 force = (other.gameObject.transform.position - Player.transform.position).normalized * AttackForce;
             other.gameObject.GetComponent<Rigidbody2D>().AddForce(force);
-            Debug.Log("아파욧!" + force);
+            Debug.Log("아파욧!");
         }
     }
 }
