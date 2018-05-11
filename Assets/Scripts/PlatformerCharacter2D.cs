@@ -11,6 +11,10 @@ namespace UnityStandardAssets._2D
         [Range(0, 1)] [SerializeField] private float m_CrouchSpeed = .36f;  // Amount of maxSpeed applied to crouching movement. 1 = 100%
         [SerializeField] private bool m_AirControl = false;                 // Whether or not a player can steer while jumping;
         [SerializeField] private LayerMask m_WhatIsGround;                  // A mask determining what is ground to the character
+        [SerializeField] private GameObject m_AttackBox = null;
+        [SerializeField] private GameObject m_JumpAttackBox = null;
+        private float m_InputDisableTime;
+        private float m_NextComboAbleTime;
 
         private Transform m_GroundCheck;    // A position marking where to check if the player is grounded.
         const float k_GroundedRadius = .2f; // Radius of the overlap circle to determine if grounded
@@ -29,12 +33,14 @@ namespace UnityStandardAssets._2D
             m_CeilingCheck = transform.Find("CeilingCheck");
             m_Anim = GetComponent<Animator>();
             m_Rigidbody2D = GetComponent<Rigidbody2D>();
-            m_BoxCollider2D = GetComponent<BoxCollider2D>();
         }
 
         private void Update()
         {
-
+            if (m_AttackBox.activeInHierarchy)
+                m_AttackBox.SetActive(false);
+            m_InputDisableTime = Math.Max(m_InputDisableTime - Time.deltaTime, 0);
+            m_NextComboAbleTime = Math.Max(m_NextComboAbleTime - Time.deltaTime, 0);
         }
 
         private void FixedUpdate()
@@ -46,8 +52,12 @@ namespace UnityStandardAssets._2D
             Collider2D[] colliders = Physics2D.OverlapCircleAll(m_GroundCheck.position, k_GroundedRadius, m_WhatIsGround);
             for (int i = 0; i < colliders.Length; i++)
             {
-                if (colliders[i].gameObject != gameObject)
+                if (colliders[i].gameObject != gameObject && colliders[i].CompareTag("Floor"))
+                {
                     m_Grounded = true;
+                    m_JumpAttackBox.SetActive(false);
+                    m_Rigidbody2D.gravityScale = 3;
+               }
             }
             m_Anim.SetBool("Ground", m_Grounded);
 
@@ -58,6 +68,9 @@ namespace UnityStandardAssets._2D
 
         public void Move(float move, bool crouch, bool jump)
         {
+            if (m_InputDisableTime > 0)
+                return;
+
             // If crouching, check to see if the character can stand up
             if (!crouch && m_Anim.GetBool("Crouch"))
             {
@@ -75,13 +88,13 @@ namespace UnityStandardAssets._2D
             if (m_Grounded || m_AirControl)
             {
                 // Reduce the speed if crouching by the crouchSpeed multiplier
-                move = (crouch ? move*m_CrouchSpeed : move);
+                move = (crouch ? move * m_CrouchSpeed : move);
 
                 // The Speed animator parameter is set to the absolute value of the horizontal input.
                 m_Anim.SetFloat("Speed", Mathf.Abs(move));
 
                 // Move the character
-                m_Rigidbody2D.velocity = new Vector2(move*m_MaxSpeed, m_Rigidbody2D.velocity.y);
+                m_Rigidbody2D.velocity = new Vector2(move * m_MaxSpeed, m_Rigidbody2D.velocity.y);
 
                 // If the input is moving the player right and the player is facing left...
                 if (move > 0 && !m_FacingRight)
@@ -89,7 +102,7 @@ namespace UnityStandardAssets._2D
                     // ... flip the player.
                     Flip();
                 }
-                    // Otherwise if the input is moving the player left and the player is facing right...
+                // Otherwise if the input is moving the player left and the player is facing right...
                 else if (move < 0 && m_FacingRight)
                 {
                     // ... flip the player.
@@ -106,20 +119,34 @@ namespace UnityStandardAssets._2D
             }
         }
 
-        public IEnumerator Attack()
+        public void Attack()
         {
-            m_Anim.SetBool("Attack", true);
-            m_BoxCollider2D.enabled = true;
-            yield return new WaitForSeconds(0.25f);
-            m_Anim.SetBool("Attack", false);
-            m_BoxCollider2D.enabled = false;
-        }
+            if (m_InputDisableTime > 0)
+                return;
+            
+            if (!m_Grounded)
+            {
+                Debug.Log("Jump Attack!");
+                m_Rigidbody2D.gravityScale = 50;
+                m_JumpAttackBox.SetActive(true);
+                m_InputDisableTime += 0.75f;
+            }
+            else
+            {
+                m_AttackBox.SetActive(true);
 
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            if (other.gameObject.CompareTag("Enemy"))
-                // Write Attack Message
-                Debug.Log("Hello!");
+                if (m_NextComboAbleTime > 0)
+                {
+                    Debug.Log("Combo!");
+                    m_NextComboAbleTime = 0;
+                }
+                else
+                {
+                    Debug.Log("Attack!");
+                    m_NextComboAbleTime += 1;
+                }
+                m_InputDisableTime += 0.25f;
+            }
         }
 
         private void Flip()

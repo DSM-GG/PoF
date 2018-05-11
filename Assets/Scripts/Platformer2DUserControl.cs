@@ -16,7 +16,6 @@ namespace UnityStandardAssets._2D
             m_Character = GetComponent<PlatformerCharacter2D>();
         }
 
-
         private void Update()
         {
             if (!m_Jump)
@@ -42,7 +41,7 @@ namespace UnityStandardAssets._2D
             m_Jump = false;
 
             if (m_Attack)
-                m_Character.StartCoroutine(m_Character.Attack());
+                m_Character.Attack();
             m_Attack = false;
         }
     }
