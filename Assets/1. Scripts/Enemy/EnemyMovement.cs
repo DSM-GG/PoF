@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour
 {
-
     // Private
     bool isTracing = false; // 적의 추적 플래그 
     bool isThereHole = false;
@@ -13,16 +12,17 @@ public class EnemyMovement : MonoBehaviour
     EnemyGroundChecker checkGrounded;
     SpriteRenderer spriteRenderer;
     EnemyDetect_Trace detect; // 플레이어 감지를 위한 스크립트 변수 
-    GameObject target;  // 추적 대상(Player)
     EnemyStat stat;
     Animator animator;
 
     // public
-    public int direction = 1; // 적의 방향  
+    public int direction = 0; // 적의 방향  
+    public GameObject target;  // 추적 대상(Player)
 
     // Use this for initialization
     void Start()
     {
+        target = null;
         detect = GetComponentInChildren<EnemyDetect_Trace>();
         stat = GetComponent<EnemyStat>();
         animator = GetComponent<Animator>();
@@ -44,88 +44,131 @@ public class EnemyMovement : MonoBehaviour
     {
         DecideDirection();
 
+        Debug.Log("Moving");
+
         // 땅에 닿아 있을때만 이동 
         if (direction == checkGrounded.wallDirection * -1 || checkGrounded.wallDirection == 0)
             transform.position += new Vector3(direction * stat.speed * Time.deltaTime, 0, 0);
-        return;
     }
 
     // 몬스터의 이동 플래그를 확인, 갱신을 담당 
     void CheckCollider()
     {
-        isTracing = detect.isDetecting;
-        target = detect.target;
+            isTracing = (detect.isDetecting || IsGameObjNull(target));
+            Debug.Log("IsTracing : " + isTracing);
 
-        if (direction == -1 || direction == 1)
-        {
-            animator.SetBool("IsWalking", true);
-            animator.SetBool("IsIdle", false);
-        }
-        else
-        {
-            animator.SetBool("IsWalking", false);
-            animator.SetBool("IsIdle", true);
-        }
+            if (detect.target)
+                target = detect.target;
 
+            if (direction == -1 || direction == 1)
+            {
+                animator.SetBool("IsWalking", true);
+                animator.SetBool("IsIdle", false);
+            }
+            else
+            {
+                animator.SetBool("IsWalking", false);
+                animator.SetBool("IsIdle", true);
+            }
         return;
     }
 
     // 몬스터의 이동 방향을 담당 
     void DecideDirection()
     {
-        // 추적 중이라면 
-        if (isTracing && target.tag == "Player")
-        {
-            if (target.transform.position.x >= transform.position.x)
-            {
-                direction = 1;
-            }
-            else
-            {
-                direction = -1;
-            }
-        }
-
         // 스프라이트 이미지 방향을 바꿈. 
         if (direction == 1)
             spriteRenderer.flipX = false;
         else
             spriteRenderer.flipX = true;
 
-        // 추적을 안하고있다면 
 
-        return;
+        if (target == null)
+            return;
+
+        // 좀비 X
+        if (!stat.isZombie)
+        {
+            // 추적 중이라면
+            if (target.tag == "Player" && isTracing)
+            {
+                if (target.transform.position.x >= transform.position.x)
+                {
+                    direction = 1;
+                }
+                else
+                {
+                    direction = -1;
+                }
+
+                if (Mathf.Abs(transform.position.x - target.transform.position.x) > stat.ExitRange ||
+                 Mathf.Abs(transform.position.y - target.transform.position.y) > 2)
+                {
+                    target = null;
+                }
+
+
+            }
+        }
+        // 좀비 O
+        else
+        {
+            if (target.tag == "Enemy")
+            {
+                if (target.transform.position.x >= transform.position.x)
+                {
+                    direction = 1;
+                }
+                else
+                {
+                    direction = -1;
+                }
+            }
+        }
+
+        // 추적을 안하고있다면 
     }
 
     IEnumerator ChangeFlag()
     {
+        if (stat.isZombie)
+            yield return null;
+
         if (!isTracing)
         {
             direction = Random.Range(-1, 2);
-            Debug.Log(direction);
+            Debug.Log("Chagedirection() : " + direction);
         }
         yield return new WaitForSeconds(stat.patrolTime);
 
         StartCoroutine("ChangeFlag");
     }
 
-    //private void OnTriggerEnter2D(Collider2D collision)
-    //{
-    //    if (collision.tag == "Wall")
-    //    {
-    //        if (transform.position.x > collision.gameObject.transform.position.x)
-    //            wallDirection = -1;
-    //        else
-    //            wallDirection = 1;
+    public void SetTarget(GameObject obj)
+    {
+        target = obj;
+    }
 
-    //        isThereHole = true;
-    //    }
-    //}
+    public GameObject GetTarget()
+    {
+        return target;
+    }
 
-    //private void OnTriggerExit2D(Collider2D collision)
-    //{
-    //    if (collision.tag == "Wall")
-    //        isThereHole = false;
-    //}
+    bool IsGameObjNull(GameObject gameObject)
+    {
+        if (gameObject == null)
+            return false;
+        else
+            return true;
+    }
 
+    public void AlertObservers(string msg)
+    {
+        // 애니메이션이 끝났다면 해당 오브젝트를 삭제
+        if (msg.Equals("AnimationEnd"))
+        {
+            EnemyAttack temp = GetComponentInChildren<EnemyAttack>();
+            temp.animationEnd = true;
+        }
+    }
 }

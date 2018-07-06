@@ -3,15 +3,7 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-<<<<<<< HEAD
-  - Tile
-  - Enemy
-=======
-  - Enemy
-  - Tile
->>>>>>> b3473dda6d5503c36c8e441270f6aa5e562044eb
-  - Wall
+  tags: []
   layers:
   - Default
   - TransparentFX
