@@ -3,7 +3,15 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Ground
+  - River
+  - Enemy
+  - Manager
+  - Canvas
+  - Break
+  - Elevator
+  - Setting
   layers:
   - Default
   - TransparentFX
